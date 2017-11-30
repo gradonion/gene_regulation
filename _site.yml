@@ -1,0 +1,21 @@
+name: Gene Regulation
+output_dir: "docs"
+include: [".nojekyll"]
+exclude: ["include"]
+navbar:
+  title: Gene Regulation
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Progress"
+      menu: 
+        - text: "Enhancer-TSS"
+          href: enhancer_tss.html
+        - text: "TF-Gene"
+          href: HBB-TF_Regression_Analysis.html             
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: textmate

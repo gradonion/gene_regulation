@@ -1,0 +1,12 @@
+---
+title: "Inferring Gene Reugulatory Architectures"
+output:
+  html_document:
+    toc: true
+---
+
+<span style="color:black; font-size:1.4em;">The goal of this project is to reconstruct cell-type specific gene regulatory networks using NGS data. Specifically,</span>
+
+*  Link enhancers with target genes: Hi-C or expression correlation analysis between enhancers and TSS.
+*  Identify the putative regulators (TF, miRNA, RBPs) for each enhancer: sequence (motif) analysis. 
+*  Correlate [TF], [RBP] with gene expression: predictive modeling including biophysical model and artificial neural network.

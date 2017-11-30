@@ -1,0 +1,17 @@
+---
+title: "Linking enhancers and target genes"
+output:
+  html_document:
+    toc: false
+---
+
+### Data
+*  Cell type/tissue specific [FANTOM5 Enhancer data][FANTOM5_en]
+*  Transcription starting site [(TSS) data][FANTOM5_tss]
+
+### References
+*  [An atlas of active enhancers across human cell types and tissues][FANTOM5_paper]
+
+[FANTOM5_en]: http://fantom.gsc.riken.jp/5/datafiles/latest/extra/Enhancers/
+[FANTOM5_tss]: http://fantom.gsc.riken.jp/5/datafiles/phase1.3/extra/TSS_classifier/
+[FANTOM5_paper]: https://www.nature.com/nature/journal/v507/n7493/full/nature12787.html
