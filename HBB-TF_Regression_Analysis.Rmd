@@ -184,9 +184,9 @@ qqline(BIC_model$residuals,col='red')
 
 ## Negative Controls
 
-```{r eval=FALSE, include=FALSE}
+```{r include=FALSE}
 p = 6
-r = 10000
+r = 1000
 R_sq_HBB = rep(0,r)
 HBB_TF_control <- data.frame(matrix(nrow = 407, ncol = p))
 HBB_TF_control <- cbind(HBB_TF_control,t(HBB_exp))

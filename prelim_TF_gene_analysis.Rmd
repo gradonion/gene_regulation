@@ -201,9 +201,9 @@ qqline(fit_bc_LY75$residuals,col='red')
 ## Negative Controls
 
 We randomly select 7 genes available in GTEx and regress _LY75_ expression onto their expression levels to see if $R^2$ is as big as our previous model in which the predictors are the 7 selected TFs.
-```
+```{r}
 p = 7
-r = 10000
+r = 1000
 R_sq_LY75 = rep(0,r)
 LY75_TF_control <- data.frame(matrix(nrow = 407, ncol = p))
 LY75_TF_control <- cbind(LY75_TF_control,t(LY75_exp))

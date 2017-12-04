@@ -526,8 +526,8 @@ qqline(fit_bc_LY75$residuals,col=&#39;red&#39;)</code></pre>
 <div id="negative-controls" class="section level2">
 <h2>Negative Controls</h2>
 <p>We randomly select 7 genes available in GTEx and regress <em>LY75</em> expression onto their expression levels to see if <span class="math inline">\(R^2\)</span> is as big as our previous model in which the predictors are the 7 selected TFs.</p>
-<pre><code>p = 7
-r = 10000
+<pre class="r"><code>p = 7
+r = 1000
 R_sq_LY75 = rep(0,r)
 LY75_TF_control &lt;- data.frame(matrix(nrow = 407, ncol = p))
 LY75_TF_control &lt;- cbind(LY75_TF_control,t(LY75_exp))
@@ -557,10 +557,10 @@ for (k in c(1:r)){
 }</code></pre>
 <p><span class="math inline">\(R^2\)</span>s from the control models:</p>
 <pre class="r"><code>hist(R_sq_LY75, main = &#39;Distribution of R_sq of Control Models&#39;)</code></pre>
-<p><img src="Figs/unnamed-chunk-19-1.png" width="576" /></p>
+<p><img src="Figs/unnamed-chunk-20-1.png" width="576" /></p>
 <pre class="r"><code>summary(R_sq_LY75)</code></pre>
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.4999  0.5000  0.4997  0.5001  0.5003 </code></pre>
+ 0.0000  0.4999  0.5000  0.4990  0.5001  0.5002 </code></pre>
 </div>
 
 
