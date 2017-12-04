@@ -1,0 +1,242 @@
+---
+title: "Preliminary Analysis of TF-Gene Association"
+author: "Yifan Zhou"
+output:
+  html_document: 
+    toc: true
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=6, fig.height=4, fig.path='Figs/',
+                      echo=TRUE, warning=FALSE, message=FALSE, comment = NA)
+```
+
+## Load data
+
+We choose whole blood as the tissue of interest for preliminary analysis.
+
+Load tissue-specific (whole blood) gene expression tpm data extracted from GTEx v7 `GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_tpm.gct`, and do normalization:
+
+```{r eval=FALSE, include=FALSE}
+blood_gene_exp <- read.delim(file = 'blood_gene_expression.txt',
+                             sep = '\t',header = TRUE,stringsAsFactors = FALSE)
+blood_gene_exp_norm <- blood_gene_exp
+blood_gene_exp_norm[,2:408] <- blood_gene_exp[,2:408]/colSums(blood_gene_exp[,2:408])
+```
+
+```{r}
+load('~/Downloads/Research/GTEx/blood_gene_exp_norm.Rdata')
+```
+
+Load data from results of 'tissue-specific circuits' paper (`blood_adult.txt` from one of the 394 individual networks they generated, downloaded from http://regulatorycircuits.org/download.html):
+```{r}
+blood_TF_gene <- read.delim(file = '~/Downloads/Research/GTEx/blood_adult_TF_gene.txt',
+                            sep = '\t', header = FALSE, stringsAsFactors = FALSE) 
+```
+
+**GTEx expression data overview**
+```{r}
+sum_gene <- rowSums(blood_gene_exp_norm[,-1])
+names(sum_gene) <- blood_gene_exp_norm$Description
+summary(sum_gene)
+hist(log10(sum_gene))
+```
+
+The distribution of gene expression is roughly log-normal. A few genes have extremely high expression rate.
+
+Top 30 expressed genes in blood tissue type:
+```{r}
+top30 <- sum_gene[which(log10(sum_gene)>0)]
+top30
+```
+
+## _LY75_ and its associated TFs
+
+_LY75_ is a gene that encodes DEC-205 (also known as CD205), a cell surface receptor that is highly expressed on dendritic cells and is involved in the endocytosis of extracellular antigens and their presentation on MHC class I molecules. We choose _LY75_ as a target gene of interest to analyze the association of _LY75_ expression level with the expression levels of putative TFs linked to _LY75_: 
+
+We first identify a list of putative TFs that are linked to _LY75_ according to results from the paper:
+```{r}
+LY75 <- blood_TF_gene[which(blood_TF_gene[,2]=='LY75'),]
+LY75 <- LY75[order(LY75[,3],decreasing = TRUE),]
+LY75_TF_names<- LY75[,1]
+t(LY75_TF_names)
+```
+
+```{r}
+for (i in LY75_TF_names){
+  print(blood_gene_exp_norm$Description[startsWith(blood_gene_exp_norm$Description, as.character(i))] )
+}
+```
+
+We leave aside 3 TF genes, _HF1H3B_, _CDX_, and _IRF_, which cannot be exactly found in GTEx.
+
+We then extract expression data of _LY75_ and the rest 25 TFs that are available in GTEx:
+```{r}
+LY75_TF_names <- LY75_TF_names[-c(2,27,28)]
+n = 25
+LY75_TF_exp <- data.frame(matrix(nrow = 407, ncol = n))
+
+for (i in c(1:n)){
+  LY75_TF_exp[,i] <- t(blood_gene_exp_norm[which(blood_gene_exp_norm$Description
+                                          ==as.character(LY75_TF_names[i])),-1])
+}
+
+LY75_exp <- t(blood_gene_exp_norm[which(blood_gene_exp_norm$Description=='LY75'),-1])
+LY75_TF_exp <- cbind(LY75_TF_exp,LY75_exp)
+colnames(LY75_TF_exp) <- c(LY75_TF_names,'LY75')
+row.names(LY75_TF_exp) <- colnames(blood_gene_exp_norm)[-1]
+```
+
+## Linear Regression
+
+Multiple linear regression on all 25 TFs:
+```{r}
+fit_all_LY75 <- lm(LY75 ~ ., data = LY75_TF_exp)
+summary(fit_all_LY75)
+```
+
+
+**Forward selection**
+
+Find the first significant predictor:
+```{r echo=FALSE}
+df <- LY75_TF_exp
+response_str <- "LY75 ~ "
+end <- length(colnames(df))
+R <- colnames(df)[-end] # Initial set of predictors
+pval <- rep(NA,length(R)); names(pval) <- R
+R_sq <- rep(NA,length(R)); names(R_sq) <- R
+for(j in R){
+  fit <- lm(as.formula(paste0(response_str,j)), data=df)
+  fitsum <- summary(fit)
+  pval[j] <- fitsum$coefficients[j,4]
+  R_sq[j] <- fitsum$r.squared
+}
+min_pval <- pval[which(pval == min(pval))]
+r_sq <- R_sq[which(pval == min(pval))]
+R[which(pval == min(pval))]
+```
+
+Add rest of the predictors one at a time until none of their p-values are significant (p value > 0.05):
+```{r echo=FALSE}
+stats_LY75 <- data.frame(HIF1A = c(min_pval,r_sq),row.names = c("p-val","R-squared"))
+fit <- lm(as.formula(paste0(response_str,names(min_pval))), data=df)
+R <- R[-which(R == names(min_pval))] # The rest of the predictors
+nonstop = TRUE
+while(nonstop){
+  pval <- rep(NA,length(R)); names(pval) <- R
+  R_sq <- rep(NA,length(R)); names(R_sq) <- R
+  for(j in R){
+    fit_loop <- update(fit, as.formula(paste0(".~. +",j)))
+    fitsum <- summary(fit_loop)
+    pval[j] <- fitsum$coefficients[j,4]
+    R_sq[j] <- fitsum$r.squared
+  }
+  min_pval <- pval[which(pval == min(pval))]
+  r_sq <- R_sq[which(pval == min(pval))]
+  if(min_pval < 0.05){
+    stats_LY75[,names(min_pval)] <- c(min_pval,r_sq)
+    fit <- update(fit, as.formula(paste0(".~. +",names(min_pval))))
+    R <- R[-which(R == names(min_pval))]
+  }
+  else{
+    nonstop = FALSE
+    forward_model_LY75 <- fit
+  }
+}
+rm(list = 'fit_loop')
+```
+
+The p-value and $R^2$ statistic for each of the significant predictors added at each round of selection are:
+```{r}
+stats_LY75
+```
+
+Summary of the selected model:
+```{r}
+summary(forward_model_LY75)
+```
+
+Plot the increase of $R^2$ with the adding of predictors:
+```{r}
+plot(as.matrix(stats_LY75)[2,], pch=16, xlab="Number of Predictors",ylab = "R_2")
+```
+
+
+**Normality check and Boxcoc transformation**
+
+Check the normality assumption:
+```{r}
+par(mfrow=c(1,2))
+hist(fit_all_LY75$residuals)
+qqnorm(fit_all_LY75$residuals,pch=16) 
+qqline(fit_all_LY75$residuals,col='red')
+```
+
+The distridution of residuals is heavily long-tailed.
+
+We try to do Boxcox transformation on the response variable to restore the normality:
+```{r}
+library(MASS)
+bc <- boxcox(fit_all_LY75, plot=T, lambda=seq(-0.5,1,by=0.1))
+```
+
+$\lambda$ that maximizes the profile log-likelihood is:
+```{r}
+bc$x[which(bc$y == max(bc$y))]
+```
+
+```{r}
+lambda=0.4
+LY75_TF_exp_bc <- LY75_TF_exp
+LY75_TF_exp_bc[,n+1] <- (LY75_TF_exp[,n+1]^lambda-1)/lambda
+fit_bc_LY75 <- lm(LY75 ~., data=LY75_TF_exp_bc)
+par(mfrow=c(1,2))
+hist(fit_bc_LY75$residuals)
+qqnorm(fit_bc_LY75$residuals,pch=16) 
+qqline(fit_bc_LY75$residuals,col='red')
+```
+
+
+## Negative Controls
+
+We randomly select 7 genes available in GTEx and regress _LY75_ expression onto their expression levels to see if $R^2$ is as big as our previous model in which the predictors are the 7 selected TFs.
+```
+p = 7
+r = 10000
+R_sq_LY75 = rep(0,r)
+LY75_TF_control <- data.frame(matrix(nrow = 407, ncol = p))
+LY75_TF_control <- cbind(LY75_TF_control,t(LY75_exp))
+colnames(LY75_TF_control)[p+1] <- 'LY75'
+
+rand_LY75 = matrix(nrow = r, ncol = p)
+
+for (k in c(1:r)){
+  rand_LY75[k,] <- sample(c(1:56202),p,replace = FALSE)
+  rand_LY75_name <- blood_gene_exp_norm$Description[rand_LY75[k,]]
+  temp <- rand_LY75_name[duplicated(rand_LY75_name)]
+
+  while (length(temp)>0){
+    rand_LY75[k,] <- sample(c(1:56202),p,replace = FALSE)
+    rand_LY75_name <- blood_gene_exp_norm$Description[rand_LY75[k,]]
+    temp <- rand_LY75_name[duplicated(rand_LY75_name)]
+  }
+
+  colnames(LY75_TF_control)[1:p] <- rand_LY75_name
+
+  for (i in c(1:p)){
+    LY75_TF_control[,i] <- t(blood_gene_exp_norm[rand_LY75[k,i],-1])
+  }
+
+  fit_control_LY75 <- summary(lm(LY75 ~. , data = LY75_TF_control))
+  R_sq_LY75[k] = fit_control_LY75$r.squared
+}
+```
+
+$R^2$s from the control models:
+```{r}
+hist(R_sq_LY75, main = 'Distribution of R_sq of Control Models')
+summary(R_sq_LY75)
+```
+
+

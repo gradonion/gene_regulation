@@ -5,14 +5,16 @@ exclude: ["include"]
 navbar:
   title: Gene Regulation
   left:
-    - text: "Home"
+    - text: "Description"
       href: index.html
     - text: "Progress"
       menu: 
         - text: "Enhancer-TSS"
           href: enhancer_tss.html
-        - text: "TF-Gene"
-          href: HBB-TF_Regression_Analysis.html             
+        - text: "TF-Gene(LY75)"  
+          href: prelim_TF_gene_analysis.html  
+        - text: "TF-Gene(HBB)"
+          href: HBB-TF_Regression_Analysis.html         
 output:
   html_document:
     toc: true

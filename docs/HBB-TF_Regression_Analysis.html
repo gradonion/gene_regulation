@@ -12,7 +12,7 @@
 <meta name="author" content="Yifan Zhou" />
 
 
-<title>Gene-TF Regression Analysis</title>
+<title>HBB-TF Regression Analysis</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -162,6 +165,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -177,7 +275,7 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">Description</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -190,7 +288,10 @@ $(document).ready(function () {
       <a href="enhancer_tss.html">Enhancer-TSS</a>
     </li>
     <li>
-      <a href="HBB-TF_Regression_Analysis.html">TF-Gene</a>
+      <a href="prelim_TF_gene_analysis.html">TF-Gene(LY75)</a>
+    </li>
+    <li>
+      <a href="HBB-TF_Regression_Analysis.html">TF-Gene(HBB)</a>
     </li>
   </ul>
 </li>
@@ -206,33 +307,35 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Gene-TF Regression Analysis</h1>
+<h1 class="title toc-ignore">HBB-TF Regression Analysis</h1>
 <h4 class="author"><em>Yifan Zhou</em></h4>
 
 </div>
 
 
+<div id="load-data" class="section level2">
+<h2>Load Data</h2>
 <p>We choose whole blood as the tissue of interest for preliminary analysis.</p>
-<p>Load tissue-specific (whole blood) gene expression tpm data extraced from GTEx v7 <code>GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_tpm.gct</code>:</p>
-<pre class="r"><code>blood_gene_exp &lt;- read.delim(file = &#39;Data/blood_gene_expression.txt&#39;,
-                             sep = &#39;\t&#39;,header = TRUE,stringsAsFactors = FALSE)</code></pre>
+<p>Load tissue-specific (whole blood) gene expression tpm data extracted from GTEx v7 <code>GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_tpm.gct</code>, and do normalization:</p>
+<pre class="r"><code>load(&#39;~/Downloads/Research/GTEx/blood_gene_exp_norm.Rdata&#39;)</code></pre>
 <p>Load data from ‘tissue-specific circuits’ paper (<code>blood_adult.txt</code> from [394 individual networks] <a href="http://regulatorycircuits.org/download.html" class="uri">http://regulatorycircuits.org/download.html</a>):</p>
-<pre class="r"><code>blood_TF_gene &lt;- read.delim(file = &#39;Data/blood_adult_TF_gene.txt&#39;,sep = &#39;\t&#39;,
-                            header = FALSE,stringsAsFactors = TRUE) 
-gene_names &lt;-blood_TF_gene[,2]</code></pre>
+<pre class="r"><code>blood_TF_gene &lt;- read.delim(file = &#39;~/Downloads/Research/GTEx/blood_adult_TF_gene.txt&#39;,
+                            sep = &#39;\t&#39;, header = FALSE, stringsAsFactors = FALSE) </code></pre>
+</div>
+<div id="hbb-and-its-associated-tfs" class="section level2">
+<h2><em>HBB</em> and its Associated TFs</h2>
 <p>We choose <em>HBB</em>, a gene that encodes haemoglobin subunit beta as a target gene of interest to analyze the association of <em>HBB</em> expression level with the expression levels of putative TFs linked to <em>HBB</em>:</p>
-<pre class="r"><code>HBB &lt;- blood_TF_gene[which(gene_names==&#39;HBB&#39;),]
-temp &lt;- HBB[,3]
-HBB &lt;- HBB[order(temp,decreasing = TRUE),]
+<pre class="r"><code>HBB &lt;- blood_TF_gene[which(blood_TF_gene[,2]==&#39;HBB&#39;),]
+HBB &lt;- HBB[order(HBB[,3],decreasing = TRUE),]
 HBB_TF_names&lt;- HBB[,1]</code></pre>
 <p>Putative TF list for gene <em>HBB</em>:</p>
 <pre class="r"><code>as.character(HBB_TF_names)</code></pre>
 <pre><code> [1] &quot;KLF4&quot;   &quot;CACD&quot;   &quot;GATA3&quot;  &quot;GATA4&quot;  &quot;GATA5&quot;  &quot;RAR&quot;    &quot;HF1H3B&quot;
  [8] &quot;SP1&quot;    &quot;ZBTB33&quot; &quot;GATA6&quot;  &quot;ATF2&quot;   &quot;GTF2I&quot;  &quot;NFIC&quot;   &quot;NFIL3&quot; 
 [15] &quot;HNF4A&quot;  &quot;GMEB2&quot; </code></pre>
-<p>Search for these TFs in the GTEx gene expression list:</p>
+<p>Search for these 16 TFs in the GTEx gene expression list:</p>
 <pre class="r"><code>for (i in HBB_TF_names){
-    print(blood_gene_exp$Description[startsWith(blood_gene_exp$Description, as.character(i))] )
+    print(blood_gene_exp_norm$Description[startsWith(blood_gene_exp_norm$Description, as.character(i))] )
 }</code></pre>
 <pre><code>[1] &quot;KLF4&quot;
 character(0)
@@ -254,54 +357,57 @@ character(0)
 [1] &quot;NFIL3&quot;
 [1] &quot;HNF4A&quot;
 [1] &quot;GMEB2&quot;</code></pre>
-<p>3 TFs <em>CACD</em>, <em>RAR</em>, and <em>HF1H3B</em> can’t be found in GTEx.</p>
+<p>3 TFs, <em>CACD</em>, <em>RAR</em>, and <em>HF1H3B</em>, cannot be found in GTEx.</p>
 <p>Extract expression data of the rest 13 TFs that are available in GTEx:</p>
 <pre class="r"><code>HBB_TF_names &lt;- HBB_TF_names[c(1,3,4,5,8:16)]
 n = 13
-HBB_TF_df &lt;- data.frame(matrix(nrow = n, ncol = 407))
-row.names(HBB_TF_df) &lt;- HBB_TF_names
+HBB_TF_exp &lt;- data.frame(matrix(nrow = 407, ncol = n))
 for (i in c(1:n)){
-  HBB_TF_df[i,] &lt;- blood_gene_exp[which(blood_gene_exp$Description==as.character(HBB_TF_names[i])),-1]
+  HBB_TF_exp[,i] &lt;- t(blood_gene_exp_norm[which(blood_gene_exp_norm$Description
+                                         ==as.character(HBB_TF_names[i])),-1])
 }
 
-HBB_TF_df &lt;- as.data.frame(t(HBB_TF_df))
-HBB_exp &lt;- blood_gene_exp[which(blood_gene_exp$Description==&#39;HBB&#39;),-1]
-HBB_TF_df &lt;- cbind(HBB_TF_df,t(HBB_exp))
-colnames(HBB_TF_df) &lt;- c(colnames(HBB_TF_df)[-14],&#39;HBB&#39;)</code></pre>
+HBB_exp &lt;- blood_gene_exp_norm[which(blood_gene_exp_norm$Description==&#39;HBB&#39;),-1]
+HBB_TF_exp &lt;- cbind(HBB_TF_exp,t(HBB_exp))
+colnames(HBB_TF_exp) &lt;- c(HBB_TF_names,&#39;HBB&#39;)
+row.names(HBB_TF_exp) &lt;- colnames(blood_gene_exp_norm)[-1]</code></pre>
+</div>
+<div id="linear-regression" class="section level2">
+<h2>Linear Regression</h2>
 <p>Multiple linear regression on all 13 TFs:</p>
-<pre class="r"><code>fit_all13 &lt;- lm(HBB ~ ., data = HBB_TF_df)
-summary(fit_all13)</code></pre>
+<pre class="r"><code>fit_all_HBB &lt;- lm(HBB ~ ., data = HBB_TF_exp)
+summary(fit_all_HBB)</code></pre>
 <pre><code>
 Call:
-lm(formula = HBB ~ ., data = HBB_TF_df)
+lm(formula = HBB ~ ., data = HBB_TF_exp)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--222583  -55048    1499   51723  224489 
+      Min        1Q    Median        3Q       Max 
+-0.222574 -0.055046  0.001484  0.051732  0.224473 
 
 Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 530994.00    9782.82  54.278  &lt; 2e-16 ***
-KLF4          1782.06     368.04   4.842 1.85e-06 ***
-GATA3        -1751.75    1093.45  -1.602   0.1100    
-GATA4       -49612.95   37347.67  -1.328   0.1848    
-GATA5         5630.12   37887.24   0.149   0.8819    
-SP1          -1950.25     292.54  -6.667 8.88e-11 ***
-ZBTB33        4462.75    3400.92   1.312   0.1902    
-GATA6       -30880.20   13296.20  -2.322   0.0207 *  
-ATF2         -2579.34    2181.26  -1.183   0.2377    
-GTF2I        -1818.23    2516.68  -0.722   0.4704    
-NFIC         -9472.83    1882.73  -5.031 7.42e-07 ***
-NFIL3          -37.14      33.13  -1.121   0.2630    
-HNF4A       -22384.84   11791.06  -1.898   0.0584 .  
-GMEB2        -8122.76    1118.55  -7.262 2.06e-12 ***
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  5.310e-01  9.783e-03  54.279  &lt; 2e-16 ***
+KLF4         1.782e+03  3.680e+02   4.842 1.85e-06 ***
+GATA3       -1.752e+03  1.093e+03  -1.602   0.1099    
+GATA4       -4.962e+04  3.735e+04  -1.329   0.1848    
+GATA5        5.630e+03  3.789e+04   0.149   0.8819    
+SP1         -1.950e+03  2.925e+02  -6.667 8.88e-11 ***
+ZBTB33       4.463e+03  3.401e+03   1.312   0.1902    
+GATA6       -3.088e+04  1.330e+04  -2.322   0.0207 *  
+ATF2        -2.579e+03  2.181e+03  -1.183   0.2377    
+GTF2I       -1.818e+03  2.517e+03  -0.723   0.4704    
+NFIC        -9.473e+03  1.883e+03  -5.031 7.42e-07 ***
+NFIL3       -3.714e+01  3.313e+01  -1.121   0.2630    
+HNF4A       -2.238e+04  1.179e+04  -1.898   0.0584 .  
+GMEB2       -8.123e+03  1.119e+03  -7.262 2.06e-12 ***
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 78840 on 393 degrees of freedom
+Residual standard error: 0.07884 on 393 degrees of freedom
 Multiple R-squared:  0.7077,    Adjusted R-squared:  0.698 
 F-statistic: 73.18 on 13 and 393 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>Forward selection:</p>
+<p><strong>Forward Selection</strong></p>
 <pre><code>[1] &quot;GMEB2&quot;</code></pre>
 <p>After the first predictor <em>GMEB2</em> is selected, add rest of the predictors one at a time until none of their p-values are significant (p value &gt; 0.05).</p>
 <pre class="r"><code>stats &lt;- data.frame(GMEB2 = c(min_pval,r_sq),row.names = c(&quot;p-val&quot;,&quot;R-squared&quot;))
@@ -328,15 +434,16 @@ while(nonstop){
     nonstop = FALSE
     forward_model &lt;- fit
   }
-}</code></pre>
+}
+rm(list = &#39;fit_loop&#39;)</code></pre>
 <p>The p-value and <span class="math inline">\(R^2\)</span> statistic for each of the significant predictors added at each round of selection:</p>
 <pre class="r"><code>stats</code></pre>
 <pre><code>                 GMEB2          SP1        GATA6         NFIC         KLF4
-p-val     6.503978e-66 2.334295e-29 1.261083e-05 0.0009524463 1.269002e-06
-R-squared 5.165961e-01 6.467274e-01 6.630734e-01 0.6721117985 6.907740e-01
-                HNF4A      NFIL3     GATA3
-p-val     0.003113463 0.01712264 0.0403808
-R-squared 0.697465423 0.70174980 0.7048859</code></pre>
+p-val     6.496898e-66 2.329434e-29 1.261419e-05 0.0009530469 1.268444e-06
+R-squared 5.165987e-01 6.467329e-01 6.630782e-01 0.6721155521 6.907782e-01
+                HNF4A      NFIL3      GATA3
+p-val     0.003112527 0.01712368 0.04037568
+R-squared 0.697469941 0.70175418 0.70489036</code></pre>
 <p>Summary of the selected model:</p>
 <pre class="r"><code>summary(forward_model)</code></pre>
 <pre><code>
@@ -345,31 +452,95 @@ lm(formula = HBB ~ GMEB2 + SP1 + GATA6 + NFIC + KLF4 + HNF4A +
     NFIL3 + GATA3, data = df)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--223086  -54536    2887   52848  228704 
+      Min        1Q    Median        3Q       Max 
+-0.223088 -0.054531  0.002897  0.052857  0.228688 
 
 Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 529040.94    9682.31  54.640  &lt; 2e-16 ***
-GMEB2        -7944.89    1100.82  -7.217 2.71e-12 ***
-SP1          -2015.45     232.34  -8.675  &lt; 2e-16 ***
-GATA6       -37386.56    9397.72  -3.978 8.25e-05 ***
-NFIC         -9457.63    1806.61  -5.235 2.68e-07 ***
-KLF4          1747.02     347.27   5.031 7.41e-07 ***
-HNF4A       -28790.25   10635.29  -2.707  0.00708 ** 
-NFIL3          -63.97      27.47  -2.328  0.02040 *  
-GATA3        -1808.20     879.24  -2.057  0.04038 *  
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  5.290e-01  9.682e-03  54.640  &lt; 2e-16 ***
+GMEB2       -7.945e+03  1.101e+03  -7.217 2.71e-12 ***
+SP1         -2.015e+03  2.323e+02  -8.675  &lt; 2e-16 ***
+GATA6       -3.739e+04  9.398e+03  -3.978 8.24e-05 ***
+NFIC        -9.457e+03  1.807e+03  -5.235 2.68e-07 ***
+KLF4         1.747e+03  3.473e+02   5.031 7.41e-07 ***
+HNF4A       -2.879e+04  1.063e+04  -2.707  0.00708 ** 
+NFIL3       -6.397e+01  2.747e+01  -2.328  0.02040 *  
+GATA3       -1.808e+03  8.792e+02  -2.057  0.04038 *  
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 78710 on 398 degrees of freedom
+Residual standard error: 0.07871 on 398 degrees of freedom
 Multiple R-squared:  0.7049,    Adjusted R-squared:  0.699 
 F-statistic: 118.8 on 8 and 398 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>plot(as.matrix(stats)[2,], pch=16, xlab=&quot;Number of Predictors&quot;,ylab = &quot;R_2&quot;)</code></pre>
 <p><img src="Figs/unnamed-chunk-12-1.png" width="576" /></p>
+<p>Check the normality assumption:</p>
+<pre class="r"><code>par(mfrow=c(1,2))
+hist(forward_model$residuals)
+qqnorm(forward_model$residuals,pch=16) 
+qqline(forward_model$residuals,col=&#39;red&#39;)</code></pre>
+<p><img src="Figs/unnamed-chunk-13-1.png" width="576" /></p>
+<p><strong>Bayesian Information Criterion (BIC)</strong></p>
+<pre class="r"><code>library(leaps)
+RSS &lt;- summary(regsubsets(HBB ~., HBB_TF_exp)) 
+n &lt;- dim(HBB_TF_exp)[1]
+p &lt;- length(RSS$rss)+1
+BIC &lt;- n*log(RSS$rss/n) + log(n)*c(2:p) 
+plot(BIC,xlab=&#39;Number of Predictors&#39;, pch=16)</code></pre>
+<p><img src="Figs/unnamed-chunk-14-1.png" width="576" /></p>
+<p>BIC is maximized when the following 6 predictors are used:</p>
+<pre class="r"><code>BIC_predictors &lt;- RSS$which[6,RSS$which[6,]]
+BIC_predictors &lt;- names(BIC_predictors)[-1]
+BIC_predictors</code></pre>
+<pre><code>[1] &quot;KLF4&quot;  &quot;SP1&quot;   &quot;GATA6&quot; &quot;NFIC&quot;  &quot;HNF4A&quot; &quot;GMEB2&quot;</code></pre>
+<p>BIC selected model:</p>
+<pre class="r"><code>BIC_model &lt;- lm(HBB  ~ KLF4 + SP1 + GATA6 + NFIC + HNF4A + GMEB2, data = HBB_TF_exp)
+summary(BIC_model)</code></pre>
+<pre><code>
+Call:
+lm(formula = HBB ~ KLF4 + SP1 + GATA6 + NFIC + HNF4A + GMEB2, 
+    data = HBB_TF_exp)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.224867 -0.056064  0.001213  0.051060  0.236599 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  5.207e-01  9.405e-03  55.365  &lt; 2e-16 ***
+KLF4         1.659e+03  3.381e+02   4.905 1.36e-06 ***
+SP1         -1.851e+03  2.092e+02  -8.849  &lt; 2e-16 ***
+GATA6       -4.451e+04  9.057e+03  -4.914 1.30e-06 ***
+NFIC        -9.730e+03  1.822e+03  -5.339 1.57e-07 ***
+HNF4A       -3.168e+04  1.065e+04  -2.974  0.00311 ** 
+GMEB2       -9.351e+03  9.422e+02  -9.924  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.0795 on 400 degrees of freedom
+Multiple R-squared:  0.6975,    Adjusted R-squared:  0.6929 
+F-statistic: 153.7 on 6 and 400 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><strong>Normality assumption</strong></p>
+<pre class="r"><code>par(mfrow=c(1,2))
+hist(BIC_model$residuals)
+qqnorm(BIC_model$residuals,pch=16) 
+qqline(BIC_model$residuals,col=&#39;red&#39;)</code></pre>
+<p><img src="Figs/unnamed-chunk-17-1.png" width="576" /></p>
+</div>
+<div id="negative-controls" class="section level2">
+<h2>Negative Controls</h2>
+<p><span class="math inline">\(R^2\)</span>s from the control models:</p>
+<pre class="r"><code>hist(R_sq_HBB, main = &#39;Distribution of R_sq of Control Models&#39;)</code></pre>
+<p><img src="Figs/unnamed-chunk-19-1.png" width="576" /></p>
+<pre class="r"><code>summary(R_sq_HBB)</code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.01566 0.00000 0.81316 </code></pre>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 

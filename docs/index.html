@@ -274,7 +274,7 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">Description</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -287,7 +287,10 @@ div.tocify {
       <a href="enhancer_tss.html">Enhancer-TSS</a>
     </li>
     <li>
-      <a href="HBB-TF_Regression_Analysis.html">TF-Gene</a>
+      <a href="prelim_TF_gene_analysis.html">TF-Gene(LY75)</a>
+    </li>
+    <li>
+      <a href="HBB-TF_Regression_Analysis.html">TF-Gene(HBB)</a>
     </li>
   </ul>
 </li>
@@ -308,12 +311,26 @@ div.tocify {
 </div>
 
 
-<p><span style="color:black; font-size:1.4em;">The goal of this project is to reconstruct cell-type specific gene regulatory networks using NGS data. Specifically,</span></p>
+<p><span style="color:black; font-size:1.4em;">The goal of this project is to reconstruct cell-type specific gene regulatory networks using NGS data.</p>
+<div id="aim-1" class="section level2">
+<h2>Aim 1</h2>
+<p><strong>Infer tissue-specific gene regulatory networks that link cis-regulatory sequences (CRSs) and transcription factors (TFs) with the target genes.</strong></p>
+<p>Network construction involves the following steps:</p>
 <ul>
+<li>Map promoters and enhancers genome-wide: ENCODE and Roadmap annotations</li>
 <li>Link enhancers with target genes: Hi-C or expression correlation analysis between enhancers and TSS.</li>
-<li>Identify the putative regulators (TF, miRNA, RBPs) for each enhancer: sequence (motif) analysis.</li>
-<li>Correlate [TF], [RBP] with gene expression: predictive modeling including biophysical model and artificial neural network.</li>
+<li>Identify the putative regulators (TF, miRNA, RBPs) for each enhancer and promoter: sequence (motif) analysis and ChIP-seq.</li>
+<li>Correlate [TF] with gene expression: linear regression using tissue-specific gene expression data from GTEx.</li>
 </ul>
+</div>
+<div id="aim-2" class="section level2">
+<h2>Aim 2</h2>
+<p><strong>Construct transcriptional models with predictive power based on biophysical simulation of gene regulatory mechanisms (or artificial neural network).</strong></p>
+</div>
+<div id="aim-3" class="section level2">
+<h2>Aim 3</h2>
+<p><strong>Apply the predictive models to eQTL analyses and GWAS.</strong></p>
+</div>
 
 
 

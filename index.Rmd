@@ -5,8 +5,23 @@ output:
     toc: true
 ---
 
-<span style="color:black; font-size:1.4em;">The goal of this project is to reconstruct cell-type specific gene regulatory networks using NGS data. Specifically,</span>
+<span style="color:black; font-size:1.4em;">The goal of this project is to reconstruct cell-type specific gene regulatory networks using NGS data.
 
+## Aim 1 
+
+**Infer tissue-specific gene regulatory networks that link cis-regulatory sequences (CRSs) and transcription factors (TFs) with the target genes.**
+
+Network construction involves the following steps: 
+
+*  Map promoters and enhancers genome-wide: ENCODE and Roadmap annotations 
 *  Link enhancers with target genes: Hi-C or expression correlation analysis between enhancers and TSS.
-*  Identify the putative regulators (TF, miRNA, RBPs) for each enhancer: sequence (motif) analysis. 
-*  Correlate [TF], [RBP] with gene expression: predictive modeling including biophysical model and artificial neural network.
+*  Identify the putative regulators (TF, miRNA, RBPs) for each enhancer and promoter: sequence (motif) analysis and ChIP-seq. 
+*  Correlate [TF] with gene expression: linear regression using tissue-specific gene expression data from GTEx.
+
+## Aim 2
+
+**Construct transcriptional models with predictive power based on biophysical simulation of gene regulatory mechanisms (or artificial neural network).**
+
+## Aim 3
+
+**Apply the predictive models to eQTL analyses and GWAS.**
