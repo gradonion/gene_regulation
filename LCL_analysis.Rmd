@@ -1,0 +1,45 @@
+---
+title: "LCL Gene Expression Correlation Analysis"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data
+
+*  LCL RNA-seq (16614 genes, 75 cell lines) ([Battle et al., 2015][Battle], Data Table S4)
+*  LCL protein mass spec (4381 genes, 62 cell lines) ([Battle et al., 2015][Battle], Data Table S4)
+*  LCL H3K27ac (57 cell lines) ([del Rosario et al., 2015][del Rosario], GEO accession [GSE58852][GSE58852])
+*  LCL DNaseI (70 cell lines) ([Degner et al., 2012][Degner], [raw data][DNaseI])
+*  LCL Hi-C (cell line _GM12878_, mean resolution ~3.7 kb) ([Grubert et al., 2015][Grubert],GEO accession [GSE62742][GSE62742])
+*  Complete list of human TFs (1316 unique ENSG ids) ([Ensembl Biomart][ensembl TF], filtered by GO term accession: 0003700)
+
+[Battle]: http://science.sciencemag.org/content/suppl/2014/12/17/science.1260793.DC1?_ga=2.48064679.1826706411.1515443144-1380778862.1504648991
+[del Rosario]: https://www.nature.com/articles/nmeth.3326#accessions
+[GSE58852]: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE58852
+[Degner]: https://www.nature.com/articles/nature10808#accessions
+[DNaseI]: http://eqtl.uchicago.edu/dsQTL_data/RAW_DATA/
+[Grubert]: http://www.sciencedirect.com/science/article/pii/S0092867415009642?via%3Dihub#app1
+[GSE62742]: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE62742
+[ensembl TF]: http://useast.ensembl.org/biomart/martview/6650e6f03b6211e72422f941a8cd3a02
+
+For TF of interest:
+
+*  TF motifs 
+*  TF ChIP-seq (w/ knockouts)
+
+## Analyses to do
+#### For a chosen TF, preferably with TF ChIP-seq w/ knockouts data available, calculate the correlations btw/ $[TF]$ and all of its target genes $[Gene_1]$, $[Gene_2]$, ...
+##### Gene concentrations can be approximated by mRNA expression levels or protein expression levels.
+##### Target genes are those that are linked to the putative TF-bound **_enhancers_**, which can be defined in different ways:
+**1.** Elements in DHS that also contain TF motifs;  
+**2.** Elements in DHS+H3K27ac windows that also contain TF motifs;  
+**3.** Elements that are TF ChIP-seq targets;  
+**4.** Elements in H3K27ac windows that are also TF ChIP-seq targets;  
+**5.** Elements that are TF ChIP-seq w/ knockouts targets;  
+**6.** Elements that are TF-bound promoter targets;  
+...

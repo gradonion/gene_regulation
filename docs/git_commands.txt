@@ -1,0 +1,8 @@
+https://github.com/gradonion/gene_regulation.git
+git remote -v  ## the first time, to establish the link
+
+git add .
+git commit -m "update"
+git push -f origin master
+
+
