@@ -63,7 +63,7 @@ tmp = data.frame(YY1 = c(2077, (1404*100)%/%2077, 1702, 1184, (554*100)%/%2077, 
                  CEBPB = c(5786, (5335*100)%/%5786, 6685, 2577, (899*100)%/%5786, 986), 
                  SP1 = c(18248, (17410*100)%/%18248, 18543, 9282, (6622*100)%/%18248, 6722), 
                  NFYA = c(1841, (1770*100)%/%1841, 1897, 2273, (1185*100)%/%1841, 1397),
-                 row.names = c("# of ChIP-seq peaks","% of peaks in DHS","# of DHS overlapped","# genes linked thru DHS",
+                 row.names = c("# of ChIP-seq peaks","% of peaks in DHS","# of DHS overlapped","# of genes in contact w/ those DHS",
                                "% of peaks in 5kb gene promoters","# of 5kb gene promoters overlapped"))
 kable(tmp) #, caption = "Data Summary")
 ```
