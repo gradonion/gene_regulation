@@ -15,8 +15,10 @@ navbar:
           href: prelim_TF_gene_analysis.html  
         - text: "TF-Gene(HBB)"
           href: HBB-TF_Regression_Analysis.html 
-        - text: "LCL TF-Gene Correlation)"  
-          href: LCL_analysis.html      
+        - text: "LCL To-do List"  
+          href: LCL_analysis.html  
+        - text: "LCL ChIP-seq TF-Gene Correlation"  
+          href: TFBS_chipseq.html    
 output:
   html_document:
     toc: true

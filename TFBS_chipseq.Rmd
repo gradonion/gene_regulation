@@ -1,0 +1,265 @@
+---
+title: "TFBS ChIP-seq Data Analysis"
+author: "Yifan Zhou"
+date: "2/20/2018"
+output:
+  html_document:
+    toc: true
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=10, fig.height=5, fig.path='Figs/',
+                      echo=TRUE, warning=FALSE, message=FALSE, comment = NA)
+```
+
+## ChIP-seq Data
+
+TF binding site ChIP-seq data in LCL are downloaded from the [ENCODE Uniform TFBS track][ENCODE Uniform TFBS]:
+
+* cell line: GM12878 (Tier 1)
+* file format: [ENCODE narrowPeak][narrowPeak]
+
+[ENCODE Uniform TFBS]: http://genome.ucsc.edu/cgi-bin/hgTrackUi?hgsid=657090723_G179QYBBXSSU1XvyOs35l9cq4BaC&c=chrY&g=wgEncodeAwgTfbsUniform
+[narrowPeak]: https://genome.ucsc.edu/FAQ/FAQformat.html#format12
+
+Open chromatin regions in LCL:
+
+DHS peaks are available from [Grubert et al., 2015][Grubert] (Table S2), which were summarized over the original DHS profiles of 70 different LCL cell lines in [Degner et al., 2012][Degner].
+
+* ~ 250,000 DHS peaks in total
+
+[Grubert]: http://www.sciencedirect.com/science/article/pii/S0092867415009642?via%3Dihub#app1
+[Degner]: https://www.nature.com/articles/nature10808#accessions
+
+### TFs of interest: 
+
+**YY1**
+
+Encode ChIP-seq file name: `wgEncodeAwgTfbsSydhGm12878Yy1UniPk.narrowPeak`, integrated quality flag:	Caution.
+  
+**STAT1**
+
+Encode ChIP-seq file name: `wgEncodeAwgTfbsSydhGm12878Stat1UniPk.narrowPeak`, integrated quality flag:	Caution.
+
+**CEBPB**
+
+Encode ChIP-seq file name: `wgEncodeAwgTfbsHaibGm12878Cebpbsc150V0422111UniPk.narrowPeak`, integrated quality flag:	Caution.
+
+**SP1**
+
+Encode ChIP-seq file name: `wgEncodeAwgTfbsHaibGm12878Sp1Pcr1xUniPk.narrowPeak`, integrated quality flag:	Good.
+
+**NF-YA**
+
+File name: `wgEncodeAwgTfbsSydhGm12878NfyaIggmusUniPk.narrowPeak`, integrated quality flag:	Good.
+
+
+### Data Summary:
+
+```{r echo=FALSE, results='asis'}
+library(knitr)
+tmp = data.frame(YY1 = c(2077, (1404*100)%/%2077, 1702, 1184, (554*100)%/%2077, 617), 
+                 STAT1 = c(1769, (1483*100)%/%1769, 1970, 1603, (654*100)%/%1769, 727), 
+                 CEBPB = c(5786, (5335*100)%/%5786, 6685, 2577, (899*100)%/%5786, 986), 
+                 SP1 = c(18248, (17410*100)%/%18248, 18543, 9282, (6622*100)%/%18248, 6722), 
+                 NFYA = c(1841, (1770*100)%/%1841, 1897, 2273, (1185*100)%/%1841, 1397),
+                 row.names = c("# of ChIP-seq peaks","% of peaks in DHS","# of DHS overlapped","# genes linked thru DHS",
+                               "% of peaks in 5kb gene promoters","# of 5kb gene promoters overlapped"))
+kable(tmp) #, caption = "Data Summary")
+```
+
+
+## Analysis of Expression Correlation 
+
+Analyze the correlation of mRNA expression levels btw a certain TF and all the other genes (one at a time), compare btw target genes & non-target genes:
+
+* RNA-seq data: 16614 genes, 75 LCL cell lines ([Battle et al., 2015][Battle], Data Table S4).
+
+[Battle]: http://science.sciencemag.org/content/suppl/2014/12/17/science.1260793.DC1?_ga=2.48064679.1826706411.1515443144-1380778862.1504648991
+
+* Target genes are defined as those of which the +5kb promoter regions overlap with the TF ChIP-seq peaks.
+
+### TF of interest: YY1
+
+[_YY1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r YY1_hist, echo=FALSE}
+TF = "YY1"
+
+filename = paste0('~/Downloads/Research/LCL/R2_target_prom_genes_',TF,'.txt')
+rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+filename = paste0('~/Downloads/Research/LCL/R2_nontarget_prom_genes_',TF,'.txt')
+rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+num = dim(rsq_target)[1]
+title0 = paste0(TF," ~ Target-promoter genes (",num,")")
+hist0 = hist(rsq_target$V2, plot = FALSE)
+hist0$density = hist0$counts/sum(hist0$counts)*100
+
+num = dim(rsq_non)[1]
+title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
+hist1 = hist(rsq_non$V2, plot = FALSE)
+hist1$density = hist1$counts/sum(hist1$counts)*100
+
+par(mfrow=c(1,2))
+plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
+plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+```
+
+```{r YY1_overlay, echo=FALSE}
+xmax = max(max(hist0$breaks), max(hist1$breaks))
+ymax = max(max(hist0$density), max(hist1$density))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
+plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+```
+
+### TF of interest: STAT1
+
+[_STAT1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r STAT1_hist, echo=FALSE}
+TF = "STAT1"
+
+filename = paste0('~/Downloads/Research/LCL/R2_target_prom_genes_',TF,'.txt')
+rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+filename = paste0('~/Downloads/Research/LCL/R2_nontarget_prom_genes_',TF,'.txt')
+rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+num = dim(rsq_target)[1]
+title0 = paste0(TF," ~ Target-promoter genes (",num,")")
+hist0 = hist(rsq_target$V2, plot = FALSE)
+hist0$density = hist0$counts/sum(hist0$counts)*100
+
+num = dim(rsq_non)[1]
+title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
+hist1 = hist(rsq_non$V2, plot = FALSE)
+hist1$density = hist1$counts/sum(hist1$counts)*100
+
+par(mfrow=c(1,2))
+plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
+plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+```
+
+```{r STAT1_overlay, echo=FALSE}
+xmax = max(max(hist0$breaks), max(hist1$breaks))
+ymax = max(max(hist0$density), max(hist1$density))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
+plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+```
+
+### TF of interest: CEBPB
+
+[_CEBPB_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r CEBPB_hist, echo=FALSE}
+TF = "CEBPB"
+
+filename = paste0('~/Downloads/Research/LCL/R2_target_prom_genes_',TF,'.txt')
+rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+filename = paste0('~/Downloads/Research/LCL/R2_nontarget_prom_genes_',TF,'.txt')
+rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+num = dim(rsq_target)[1]
+title0 = paste0(TF," ~ Target-promoter genes (",num,")")
+hist0 = hist(rsq_target$V2, plot = FALSE)
+hist0$density = hist0$counts/sum(hist0$counts)*100
+
+num = dim(rsq_non)[1]
+title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
+hist1 = hist(rsq_non$V2, plot = FALSE)
+hist1$density = hist1$counts/sum(hist1$counts)*100
+
+par(mfrow=c(1,2))
+plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
+plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+```
+
+```{r CEBPB_overlay, echo=FALSE}
+xmax = max(max(hist0$breaks), max(hist1$breaks))
+ymax = max(max(hist0$density), max(hist1$density))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
+plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+```
+
+### TF of interest: SP1
+
+[_Sp1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r SP1_hist, echo=FALSE}
+TF = "SP1"
+
+filename = paste0('~/Downloads/Research/LCL/R2_target_prom_genes_',TF,'.txt')
+rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+filename = paste0('~/Downloads/Research/LCL/R2_nontarget_prom_genes_',TF,'.txt')
+rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+num = dim(rsq_target)[1]
+title0 = paste0(TF," ~ Target-promoter genes (",num,")")
+hist0 = hist(rsq_target$V2, plot = FALSE)
+hist0$density = hist0$counts/sum(hist0$counts)*100
+
+num = dim(rsq_non)[1]
+title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
+hist1 = hist(rsq_non$V2, plot = FALSE)
+hist1$density = hist1$counts/sum(hist1$counts)*100
+
+par(mfrow=c(1,2))
+plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
+plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+```
+
+```{r SP1_overlay, echo=FALSE}
+xmax = max(max(hist0$breaks), max(hist1$breaks))
+ymax = max(max(hist0$density), max(hist1$density))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
+plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+```
+
+### TF of interest: NF-YA
+
+[_NF-YA_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r NFYA_hist, echo=FALSE}
+TF = "NFYA"
+
+filename = paste0('~/Downloads/Research/LCL/R2_target_prom_genes_',TF,'.txt')
+rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+filename = paste0('~/Downloads/Research/LCL/R2_nontarget_prom_genes_',TF,'.txt')
+rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+
+num = dim(rsq_target)[1]
+title0 = paste0(TF," ~ Target-promoter genes (",num,")")
+hist0 = hist(rsq_target$V2, plot = FALSE)
+hist0$density = hist0$counts/sum(hist0$counts)*100
+
+num = dim(rsq_non)[1]
+title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
+hist1 = hist(rsq_non$V2, plot = FALSE)
+hist1$density = hist1$counts/sum(hist1$counts)*100
+
+par(mfrow=c(1,2))
+plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
+plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+```
+
+```{r NFYA_overlay, echo=FALSE}
+xmax = max(max(hist0$breaks), max(hist1$breaks))
+ymax = max(max(hist0$density), max(hist1$density))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
+plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+```

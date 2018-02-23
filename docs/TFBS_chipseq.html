@@ -9,9 +9,10 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Yifan Zhou" />
 
 
-<title>LCL Gene Expression Correlation Analysis</title>
+<title>TFBS ChIP-seq Data Analysis</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -314,44 +315,142 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">LCL Gene Expression Correlation Analysis</h1>
+<h1 class="title toc-ignore">TFBS ChIP-seq Data Analysis</h1>
+<h4 class="author"><em>Yifan Zhou</em></h4>
+<h4 class="date"><em>2/20/2018</em></h4>
 
 </div>
 
 
-<div id="data" class="section level2">
-<h2>Data</h2>
+<div id="chip-seq-data" class="section level2">
+<h2>ChIP-seq Data</h2>
+<p>TF binding site ChIP-seq data in LCL are downloaded from the <a href="http://genome.ucsc.edu/cgi-bin/hgTrackUi?hgsid=657090723_G179QYBBXSSU1XvyOs35l9cq4BaC&amp;c=chrY&amp;g=wgEncodeAwgTfbsUniform">ENCODE Uniform TFBS track</a>:</p>
 <ul>
-<li>LCL RNA-seq (16614 genes, 75 cell lines) (<a href="http://science.sciencemag.org/content/suppl/2014/12/17/science.1260793.DC1?_ga=2.48064679.1826706411.1515443144-1380778862.1504648991">Battle et al., 2015</a>, Data Table S4)</li>
-<li>LCL protein mass spec (4381 genes, 62 cell lines) (<a href="http://science.sciencemag.org/content/suppl/2014/12/17/science.1260793.DC1?_ga=2.48064679.1826706411.1515443144-1380778862.1504648991">Battle et al., 2015</a>, Data Table S4)</li>
-<li>LCL H3K27ac (57 cell lines) (<a href="https://www.nature.com/articles/nmeth.3326#accessions">del Rosario et al., 2015</a>, GEO accession <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE58852">GSE58852</a>)</li>
-<li>LCL DNaseI (70 cell lines) (<a href="https://www.nature.com/articles/nature10808#accessions">Degner et al., 2012</a>, <a href="http://eqtl.uchicago.edu/dsQTL_data/RAW_DATA/">raw data</a>)</li>
-<li>LCL Hi-C (cell line <em>GM12878</em>, mean resolution ~3.7 kb) (<a href="http://www.sciencedirect.com/science/article/pii/S0092867415009642?via%3Dihub#app1">Grubert et al., 2015</a>,GEO accession <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE62742">GSE62742</a>)</li>
-<li>Complete list of human TFs (1316 unique ENSG ids) (<a href="http://useast.ensembl.org/biomart/martview/6650e6f03b6211e72422f941a8cd3a02">Ensembl Biomart</a>, filtered by GO term accession: 0003700)</li>
+<li>cell line: GM12878 (Tier 1)</li>
+<li>file format: <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format12">ENCODE narrowPeak</a></li>
 </ul>
-<p>For TF of interest:</p>
+<p>Open chromatin regions in LCL:</p>
+<p>DHS peaks are available from <a href="http://www.sciencedirect.com/science/article/pii/S0092867415009642?via%3Dihub#app1">Grubert et al., 2015</a> (Table S2), which were summarized over the original DHS profiles of 70 different LCL cell lines in <a href="https://www.nature.com/articles/nature10808#accessions">Degner et al., 2012</a>.</p>
 <ul>
-<li>TF motifs</li>
-<li>TF ChIP-seq (w/ knockouts)</li>
+<li>~ 250,000 DHS peaks in total</li>
 </ul>
+<div id="tfs-of-interest" class="section level3">
+<h3>TFs of interest:</h3>
+<p><strong>YY1</strong></p>
+<p>Encode ChIP-seq file name: <code>wgEncodeAwgTfbsSydhGm12878Yy1UniPk.narrowPeak</code>, integrated quality flag: Caution.</p>
+<p><strong>STAT1</strong></p>
+<p>Encode ChIP-seq file name: <code>wgEncodeAwgTfbsSydhGm12878Stat1UniPk.narrowPeak</code>, integrated quality flag: Caution.</p>
+<p><strong>CEBPB</strong></p>
+<p>Encode ChIP-seq file name: <code>wgEncodeAwgTfbsHaibGm12878Cebpbsc150V0422111UniPk.narrowPeak</code>, integrated quality flag: Caution.</p>
+<p><strong>SP1</strong></p>
+<p>Encode ChIP-seq file name: <code>wgEncodeAwgTfbsHaibGm12878Sp1Pcr1xUniPk.narrowPeak</code>, integrated quality flag: Good.</p>
+<p><strong>NF-YA</strong></p>
+<p>File name: <code>wgEncodeAwgTfbsSydhGm12878NfyaIggmusUniPk.narrowPeak</code>, integrated quality flag: Good.</p>
 </div>
-<div id="analyses-to-do" class="section level2">
-<h2>Analyses to do</h2>
-<div id="for-a-chosen-tf-preferably-with-tf-chip-seq-w-knockouts-data-available-calculate-the-correlations-btw-tf-and-all-of-its-target-genes-gene_1-gene_2" class="section level4">
-<h4>For a chosen TF, preferably with TF ChIP-seq w/ knockouts data available, calculate the correlations btw/ <span class="math inline">\([TF]\)</span> and all of its target genes <span class="math inline">\([Gene_1]\)</span>, <span class="math inline">\([Gene_2]\)</span>, …</h4>
-<div id="gene-concentrations-can-be-approximated-by-mrna-expression-levels-or-protein-expression-levels." class="section level5">
-<h5>Gene concentrations can be approximated by mRNA expression levels or protein expression levels.</h5>
+<div id="data-summary" class="section level3">
+<h3>Data Summary:</h3>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">YY1</th>
+<th align="right">STAT1</th>
+<th align="right">CEBPB</th>
+<th align="right">SP1</th>
+<th align="right">NFYA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td># of ChIP-seq peaks</td>
+<td align="right">2077</td>
+<td align="right">1769</td>
+<td align="right">5786</td>
+<td align="right">18248</td>
+<td align="right">1841</td>
+</tr>
+<tr class="even">
+<td>% of peaks in DHS</td>
+<td align="right">67</td>
+<td align="right">83</td>
+<td align="right">92</td>
+<td align="right">95</td>
+<td align="right">96</td>
+</tr>
+<tr class="odd">
+<td># of DHS overlapped</td>
+<td align="right">1702</td>
+<td align="right">1970</td>
+<td align="right">6685</td>
+<td align="right">18543</td>
+<td align="right">1897</td>
+</tr>
+<tr class="even">
+<td># genes linked thru DHS</td>
+<td align="right">1184</td>
+<td align="right">1603</td>
+<td align="right">2577</td>
+<td align="right">9282</td>
+<td align="right">2273</td>
+</tr>
+<tr class="odd">
+<td>% of peaks in 5kb gene promoters</td>
+<td align="right">26</td>
+<td align="right">36</td>
+<td align="right">15</td>
+<td align="right">36</td>
+<td align="right">64</td>
+</tr>
+<tr class="even">
+<td># of 5kb gene promoters overlapped</td>
+<td align="right">617</td>
+<td align="right">727</td>
+<td align="right">986</td>
+<td align="right">6722</td>
+<td align="right">1397</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="target-genes-are-those-that-are-linked-to-the-putative-tf-bound-enhancers-which-can-be-defined-in-different-ways" class="section level5">
-<h5>Target genes are those that are linked to the putative TF-bound <strong><em>enhancers</em></strong>, which can be defined in different ways:</h5>
-<p><strong>1.</strong> Elements in DHS that also contain TF motifs;<br />
-<strong>2.</strong> Elements in DHS+H3K27ac windows that also contain TF motifs;<br />
-<strong>3.</strong> Elements that are TF ChIP-seq targets;<br />
-<strong>4.</strong> Elements in H3K27ac windows that are also TF ChIP-seq targets;<br />
-<strong>5.</strong> Elements that are TF ChIP-seq w/ knockouts targets;<br />
-<strong>6.</strong> Elements that are TF-bound promoter targets;<br />
-…</p>
 </div>
+<div id="analysis-of-expression-correlation" class="section level2">
+<h2>Analysis of Expression Correlation</h2>
+<p>Analyze the correlation of mRNA expression levels btw a certain TF and all the other genes (one at a time), compare btw target genes &amp; non-target genes:</p>
+<ul>
+<li>RNA-seq data: 16614 genes, 75 LCL cell lines (<a href="http://science.sciencemag.org/content/suppl/2014/12/17/science.1260793.DC1?_ga=2.48064679.1826706411.1515443144-1380778862.1504648991">Battle et al., 2015</a>, Data Table S4).</li>
+</ul>
+<ul>
+<li>Target genes are defined as those of which the +5kb promoter regions overlap with the TF ChIP-seq peaks.</li>
+</ul>
+<div id="tf-of-interest-yy1" class="section level3">
+<h3>TF of interest: YY1</h3>
+<p>[<em>YY1</em>] ~ [<em>gene</em>] mRNA expression level correlation (<span class="math inline">\(R^2\)</span>) distributions:</p>
+<p><img src="Figs/YY1_hist-1.png" width="960" /></p>
+<p><img src="Figs/YY1_overlay-1.png" width="960" /></p>
+</div>
+<div id="tf-of-interest-stat1" class="section level3">
+<h3>TF of interest: STAT1</h3>
+<p>[<em>STAT1</em>] ~ [<em>gene</em>] mRNA expression level correlation (<span class="math inline">\(R^2\)</span>) distributions:</p>
+<p><img src="Figs/STAT1_hist-1.png" width="960" /></p>
+<p><img src="Figs/STAT1_overlay-1.png" width="960" /></p>
+</div>
+<div id="tf-of-interest-cebpb" class="section level3">
+<h3>TF of interest: CEBPB</h3>
+<p>[<em>CEBPB</em>] ~ [<em>gene</em>] mRNA expression level correlation (<span class="math inline">\(R^2\)</span>) distributions:</p>
+<p><img src="Figs/CEBPB_hist-1.png" width="960" /></p>
+<p><img src="Figs/CEBPB_overlay-1.png" width="960" /></p>
+</div>
+<div id="tf-of-interest-sp1" class="section level3">
+<h3>TF of interest: SP1</h3>
+<p>[<em>Sp1</em>] ~ [<em>gene</em>] mRNA expression level correlation (<span class="math inline">\(R^2\)</span>) distributions:</p>
+<p><img src="Figs/SP1_hist-1.png" width="960" /></p>
+<p><img src="Figs/SP1_overlay-1.png" width="960" /></p>
+</div>
+<div id="tf-of-interest-nf-ya" class="section level3">
+<h3>TF of interest: NF-YA</h3>
+<p>[<em>NF-YA</em>] ~ [<em>gene</em>] mRNA expression level correlation (<span class="math inline">\(R^2\)</span>) distributions:</p>
+<p><img src="Figs/NFYA_hist-1.png" width="960" /></p>
+<p><img src="Figs/NFYA_overlay-1.png" width="960" /></p>
 </div>
 </div>
 
