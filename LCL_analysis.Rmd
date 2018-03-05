@@ -43,3 +43,10 @@ For TF of interest:
 **5.** Elements that are TF ChIP-seq w/ knockouts targets;  
 **6.** Elements that are TF-bound promoter targets;  
 ...
+
+Correct for PCs in mRNA expression data;  
+Check if ChIP-seq peaks in the promoter region has H3K4me1/... marks;   
+Raise the ChIP-seq peak signal threshold;   
+Find TF knock-out data;   
+
+
