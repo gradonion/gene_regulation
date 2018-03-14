@@ -115,7 +115,7 @@ hist_gen = function(R_sq,filename){
 
 ```{r echo=FALSE}
 TF = "STAT1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_noPC.txt')
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
 R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
                   stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
 ```
@@ -203,7 +203,7 @@ mtext("target genes: linked by HiC through peaks in DHS & H3K27ac", col = "gray3
 # mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
 
- *  Further pick the top 10% peaks based on their ChIP-se enrichment signal values, and link the target genes similarly trhough Hi-C (also corrected for the top 2 PCs):
+ *  Further pick the top 10% peaks based on their ChIP-se enrichment signal values, and link the target genes similarly through Hi-C (also corrected for the top 2 PCs):
 
 ```{r echo=FALSE}
 TF = "STAT1"
@@ -222,153 +222,262 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
 # mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
- 
- 
+
+* Peaks that contain STAT1 motif seqeunces from JASPAR:
+
+```{r echo=FALSE}
+TF = "STAT1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/chipseq_w_motifs/',TF,'_peaks_w_motifs_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.7), ylim = c(0,55), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: peaks w/ motifs & overlap w/ 3kb promoters", col = "gray30")
+```
+
+
 ### TF of interest: YY1
 
 [_YY1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
 
-```{r YY1_hist, echo=FALSE}
+```{r echo=FALSE}
 TF = "YY1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_in_prom_w_H3K27ac_targets.txt')
+hist = hist_gen(R_sq,filename)
 
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_target_prom_genes_',TF,'.txt')
-rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_nontarget_prom_genes_',TF,'.txt')
-rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-num = dim(rsq_target)[1]
-title0 = paste0(TF," ~ Target-promoter genes (",num,")")
-hist0 = hist(rsq_target$V2, plot = FALSE)
-hist0$density = hist0$counts/sum(hist0$counts)*100
-
-num = dim(rsq_non)[1]
-title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
-hist1 = hist(rsq_non$V2, plot = FALSE)
-hist1$density = hist1$counts/sum(hist1$counts)*100
-
-par(mfrow=c(1,2))
-plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
-plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
-```
-
-```{r YY1_overlay, echo=FALSE}
-xmax = max(max(hist0$breaks), max(hist1$breaks))
-ymax = max(max(hist0$density), max(hist1$density))
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
-plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 0PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.7), ylim = c(0,60), type = "o", col = "red",
      main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
 
+```{r echo=FALSE}
+TF = "YY1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_in_prom_w_H3K27ac_targets.txt')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.7), ylim = c(0,60), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
+```
 
 ### TF of interest: CEBPB
 
 [_CEBPB_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
 
-```{r CEBPB_hist, echo=FALSE}
+```{r echo=FALSE}
 TF = "CEBPB"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_in_prom_w_H3K27ac_targets.txt')
+hist = hist_gen(R_sq,filename)
 
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_target_prom_genes_',TF,'.txt')
-rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_nontarget_prom_genes_',TF,'.txt')
-rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-num = dim(rsq_target)[1]
-title0 = paste0(TF," ~ Target-promoter genes (",num,")")
-hist0 = hist(rsq_target$V2, plot = FALSE)
-hist0$density = hist0$counts/sum(hist0$counts)*100
-
-num = dim(rsq_non)[1]
-title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
-hist1 = hist(rsq_non$V2, plot = FALSE)
-hist1$density = hist1$counts/sum(hist1$counts)*100
-
-par(mfrow=c(1,2))
-plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
-plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 0PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,75), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
 
-```{r CEBPB_overlay, echo=FALSE}
-xmax = max(max(hist0$breaks), max(hist1$breaks))
-ymax = max(max(hist0$density), max(hist1$density))
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
-plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+```{r echo=FALSE}
+TF = "CEBPB"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_in_prom_w_H3K27ac_targets.txt')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,75), type = "o", col = "red",
      main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
 
 ### TF of interest: SP1
 
 [_Sp1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
 
-```{r SP1_hist, echo=FALSE}
+```{r echo=FALSE}
 TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
 
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_target_prom_genes_',TF,'.txt')
-rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_nontarget_prom_genes_',TF,'.txt')
-rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-num = dim(rsq_target)[1]
-title0 = paste0(TF," ~ Target-promoter genes (",num,")")
-hist0 = hist(rsq_target$V2, plot = FALSE)
-hist0$density = hist0$counts/sum(hist0$counts)*100
-
-num = dim(rsq_non)[1]
-title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
-hist1 = hist(rsq_non$V2, plot = FALSE)
-hist1$density = hist1$counts/sum(hist1$counts)*100
-
-par(mfrow=c(1,2))
-plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
-plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 0PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.75), ylim = c(0,65), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
 ```
 
-```{r SP1_overlay, echo=FALSE}
-xmax = max(max(hist0$breaks), max(hist1$breaks))
-ymax = max(max(hist0$density), max(hist1$density))
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
-plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.75), ylim = c(0,65), type = "o", col = "red",
      main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
+```
+
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/chipseq_w_motifs/',TF,'_peaks_w_motifs_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.75), ylim = c(0,65), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: peaks w/ motifs & overlap w/ 3kb promoter", col = "gray30")
+```
+
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/chipseq_w_motifs/',TF,'_peaks_w_motifs_HiC.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.75), ylim = c(0,65), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: linked by HiC through peaks w/ motifs and in DHS & H3K27ac", col = "gray30")
 ```
 
 ### TF of interest: NF-YA
 
 [_NF-YA_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
 
-```{r NFYA_hist, echo=FALSE}
+```{r echo=FALSE}
 TF = "NFYA"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
 
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_target_prom_genes_',TF,'.txt')
-rsq_target = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-filename = paste0('~/Downloads/Research/LCL/5kb_promoter_chipseq/R2_nontarget_prom_genes_',TF,'.txt')
-rsq_non = read.table(filename, sep = "\t", header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
-
-num = dim(rsq_target)[1]
-title0 = paste0(TF," ~ Target-promoter genes (",num,")")
-hist0 = hist(rsq_target$V2, plot = FALSE)
-hist0$density = hist0$counts/sum(hist0$counts)*100
-
-num = dim(rsq_non)[1]
-title1 = paste0(TF," ~ Non-target-promoter genes (",num,")")
-hist1 = hist(rsq_non$V2, plot = FALSE)
-hist1$density = hist1$counts/sum(hist1$counts)*100
-
-par(mfrow=c(1,2))
-plot(hist0, freq = FALSE, main = title0, xlab = expression("R"^2))
-plot(hist1, freq = FALSE, main = title1, xlab = expression("R"^2))
-```
-
-```{r NFYA_overlay, echo=FALSE}
-xmax = max(max(hist0$breaks), max(hist1$breaks))
-ymax = max(max(hist0$density), max(hist1$density))
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] R2 Distribution")
-plot(hist0$mids, hist0$density, xlim = c(0,xmax), ylim = c(0,ymax), type = "o", col = "red",
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 0PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.65), ylim = c(0,65), type = "o", col = "red",
      main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist1$mids, hist1$density,  type = "o", col = "blue")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
 ```
+
+```{r echo=FALSE}
+TF = "NFYA"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.65), ylim = c(0,65), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
+```
+
+### TF of interest: IRF4
+
+[_IRF4_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
+
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_0PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 0PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
+```
+
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: peaks overlap w/ 3kb promoter", col = "gray30")
+```
+
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/chipseq_w_motifs/',TF,'_peaks_w_motifs_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: peaks w/ motifs & overlap w/ 3kb promoter", col = "gray30")
+```
+
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/chipseq_w_motifs/',TF,'_peaks_w_motifs_HiC.target')
+hist = hist_gen(R_sq,filename)
+
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] (- 2PCs) R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.6), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+mtext("target genes: linked by HiC through peaks w/ motifs and in DHS & H3K27ac", col = "gray30")
+```
+
+
+
