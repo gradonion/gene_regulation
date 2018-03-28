@@ -1,1 +1,1 @@
-rmarkdown::render_site('TFBS_chipseq.Rmd')
+rmarkdown::render_site('index.Rmd')

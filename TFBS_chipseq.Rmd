@@ -79,10 +79,6 @@ Analyze the correlation of mRNA expression levels btw a certain TF and all the o
 
 * Target genes are defined as those of which the +5kb promoter regions overlap with the TF ChIP-seq peaks.
 
-### TF of interest: STAT1
-
-[_STAT1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
-
 ```{r include=FALSE}
 hist_gen = function(R_sq,filename){
   target = read.table(filename, header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
@@ -110,6 +106,10 @@ hist_gen = function(R_sq,filename){
   return(list(hist_0,hist_1))
 }
 ```
+
+### TF of interest: STAT1
+
+[_STAT1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
 
 * Target genes linked through ChIP-seq peaks with H3K27ac & in 3kb upstream gene promoter regions:
 
@@ -259,36 +259,6 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
 ```
 
-```{r echo=FALSE}
-TF = "STAT1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.4), ylim = c(0,80), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
-```
-
-```{r echo=FALSE}
-TF = "STAT1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.4), ylim = c(0,80), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
-
 ### TF of interest: YY1
 
 [_YY1_] ~ [_gene_] mRNA expression level correlation ($R^2$) distributions:
@@ -341,20 +311,6 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
 ```
 
-```{r echo=FALSE}
-TF = "YY1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,80), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
 
 ### TF of interest: CEBPB
 
@@ -392,20 +348,6 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: peaks overlap w/ 3kb promoter & H3K27ac", col = "gray30")
 ```
 
-```{r echo=FALSE}
-TF = "CEBPB"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.28), ylim = c(0,85), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
 
 ### TF of interest: SP1
 
@@ -489,20 +431,6 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
 ```
 
-```{r echo=FALSE}
-TF = "SP1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.3), ylim = c(0,90), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
 
 ### TF of interest: NF-YA
 
@@ -556,20 +484,6 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
 ```
 
-```{r echo=FALSE}
-TF = "NFYA"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
-hist = hist_gen(R_sq,filename)
-title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
-plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,70), type = "o", col = "red",
-     main = title, xlab = expression("R"^2), ylab = "Density (%)")
-lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
-# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
-mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
 
 ### TF of interest: IRF4
 
@@ -635,6 +549,7 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks w/ motifs and in DHS & H3K27ac", col = "gray30")
 ```
 
+
 ```{r echo=FALSE}
 TF = "IRF4"
 filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
@@ -651,6 +566,426 @@ lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
 ```
 
+
+
+## New mRNA expression data: Geuvadis database
+* RNA-seq gene expression data: [GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz][Geuvadis]
+* 23722 genes, 462 LCL cell lines from the 1000 Genomes
+* Peer-factor normalized RPKM: library depth & transcript lengths & expressed & PEER
+* 14102 genes overlap with Battle dataset
+
+[Geuvadis]: https://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/
+
+### $R^2$ difference between 2 datasets:
+
+We focus on the 14102 genes that are shared between both the Battle dataset and the Geudavis dataset.   
+For each TF, we calculate the correlation ($R^2$) of its expression level with each one of the 14102 genes, using the Geudavis dataset first and the Battle dataset next. We plot the $R^2$s obtained from the first dataset in increasing order (red), and then plot the $R^2$s obtained from the first dataset for the corresponding genes (light blue), as we expect to see some level of correlation between these two groups of $R^2$s. We then further calculated the correlation coefficient of these two groups of $R^2$s.
+
+```{r echo=FALSE}
+TF = "STAT1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000115415"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.65))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.6,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,digits = 4)))
+```
+
+
+```{r echo=FALSE}
+TF = "YY1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000100811"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.6))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.6,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,digits = 4)))
+```
+
+
+```{r echo=FALSE}
+TF = "CEBPB"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000172216"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.6))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.6,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,digits = 4)))
+```
+
+
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000185591"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.7))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.7,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste('Correlation btw the 2 groups of R^2\'s:',round(sum_lm$r.squared,digits = 4)))
+```
+
+
+```{r echo=FALSE}
+TF = "NFYA"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000001167"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.6))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.6,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,digits = 4)))
+```
+
+
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
+R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+
+R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
+tmp = na.omit(R_sq_70)
+tmp = tmp[-which(row.names(tmp)=="ENSG00000137265"),]
+title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
+plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare_462)],type = "l", col="lightblue",main = title, xlab="genes in order",ylab=expression('R'^2*' values'), ylim=c(0,0.55))
+lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare_462)], col="red")
+legend(x=10000,y=0.55,lty=1,col=c("lightblue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
+
+sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
+print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,digits = 4)))
+```
+
+
+
+### Correlation Analysis:
+
+* STAT1, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "STAT1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.4), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* STAT1, target genes: ChIP-seq peaks in ChromHmm "strong enhancers"in Hi-C contact with promoter regions
+```{r echo=FALSE}
+TF = "STAT1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.4), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
+```
+
+* YY1, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "YY1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* YY1, target genes: ChIP-seq peaks in ChromHmm "strong enhancers" that are in contact with promoter regions through Hi-C 
+```{r echo=FALSE}
+TF = "YY1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
+```
+
+* CEBPB, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "CEBPB"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+# hist = hist_gen(R_sq,filename)
+target = read.table(filename, header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+  
+  seq = 1:length(R_sq$rsquare)
+  target_order = match(target$V1, row.names(R_sq))
+  nontarget_order = seq[-target_order]
+  r_sq = R_sq$rsquare[target_order]
+  if (length(r_sq[-which(r_sq==1)])>0){
+    r_sq = r_sq[-which(r_sq==1)]
+  }
+  term = paste("Number of target genes:",length(r_sq))
+  print(term)
+  term = paste("Proportion among all genes:",round(length(r_sq)/length(R_sq$rsquare),digits = 4))
+  print(term)
+  hist_0 = hist(r_sq, plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  
+  non_r_sq = R_sq$rsquare[nontarget_order]
+  if (length(non_r_sq[-which(non_r_sq==1)])>0){
+    non_r_sq = non_r_sq[-which(non_r_sq==1)]
+  }
+  hist_1 = hist(non_r_sq, plot = FALSE)
+  hist_1$density = hist_1$counts/sum(hist_1$counts)*100
+
+  hist_0 = hist(r_sq, breaks = hist_1$breaks,plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  hist[[1]] = hist_0
+  hist[[2]] = hist_1
+  
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.28), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* CEBPB, target genes: ChIP-seq peaks in ChromHmm "strong enhancers" that are in contact with promoter regions through Hi-C 
+```{r echo=FALSE}
+TF = "CEBPB"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
+# hist = hist_gen(R_sq,filename)
+
+target = read.table(filename, header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+  
+  seq = 1:length(R_sq$rsquare)
+  target_order = match(target$V1, row.names(R_sq))
+  nontarget_order = seq[-target_order]
+  r_sq = R_sq$rsquare[target_order]
+  if (length(r_sq[-which(r_sq==1)])>0){
+    r_sq = r_sq[-which(r_sq==1)]
+  }
+  term = paste("Number of target genes:",length(r_sq))
+  print(term)
+  term = paste("Proportion among all genes:",round(length(r_sq)/length(R_sq$rsquare),digits = 4))
+  print(term)
+  hist_0 = hist(r_sq, plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  
+  non_r_sq = R_sq$rsquare[nontarget_order]
+  if (length(non_r_sq[-which(non_r_sq==1)])>0){
+    non_r_sq = non_r_sq[-which(non_r_sq==1)]
+  }
+  hist_1 = hist(non_r_sq, plot = FALSE)
+  hist_1$density = hist_1$counts/sum(hist_1$counts)*100
+
+  hist_0 = hist(r_sq, breaks = hist_1$breaks,plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  hist[[1]] = hist_0
+  hist[[2]] = hist_1
+  
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.28), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
+```
+
+
+* SP1, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.3), ylim = c(0,90), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* SP1, target genes: ChIP-seq peaks in ChromHmm "strong enhancers" that are in contact with promoter regions through Hi-C 
+```{r echo=FALSE}
+TF = "SP1"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.3), ylim = c(0,90), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
+```
+
+* NFYA, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "NFYA"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+# hist = hist_gen(R_sq,filename)
+
+target = read.table(filename, header = FALSE, na.strings = 'NA', stringsAsFactors = FALSE)
+  
+  seq = 1:length(R_sq$rsquare)
+  target_order = match(target$V1, row.names(R_sq))
+  nontarget_order = seq[-target_order]
+  r_sq = R_sq$rsquare[target_order]
+  if (length(r_sq[-which(r_sq==1)])>0){
+    r_sq = r_sq[-which(r_sq==1)]
+  }
+  term = paste("Number of target genes:",length(r_sq))
+  print(term)
+  term = paste("Proportion among all genes:",round(length(r_sq)/length(R_sq$rsquare),digits = 4))
+  print(term)
+  hist_0 = hist(r_sq, plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  
+  non_r_sq = R_sq$rsquare[nontarget_order]
+  if (length(non_r_sq[-which(non_r_sq==1)])>0){
+    non_r_sq = non_r_sq[-which(non_r_sq==1)]
+  }
+  hist_1 = hist(non_r_sq, plot = FALSE)
+  hist_1$density = hist_1$counts/sum(hist_1$counts)*100
+
+  hist_0 = hist(r_sq, breaks = hist_1$breaks,plot = FALSE)
+  hist_0$density = hist_0$counts/sum(hist_0$counts)*100
+  hist[[1]] = hist_0
+  hist[[2]] = hist_1
+  
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* NFYA, target genes: ChIP-seq peaks in ChromHmm "strong enhancers" that are in contact with promoter regions through Hi-C 
+```{r echo=FALSE}
+TF = "NFYA"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/DHS_chipseq/',TF,'_UniPk_StrEnh.GDtarget')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,70), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
+```
+
+* IRF4, target genes: ChIP-seq peaks in 3kb promoter regions
+```{r echo=FALSE}
+TF = "IRF4"
+filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
+R_sq = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
+                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
+filename = paste0('~/Downloads/Research/LCL/3kb_promoter_chipseq/',TF,'_UniPk_GD_3kb_prom.target')
+hist = hist_gen(R_sq,filename)
+title = paste0("[",TF," ~ Target] vs [",TF,"~ Non-target] GD462 R2")
+plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,80), type = "o", col = "red",
+     main = title, xlab = expression("R"^2), ylab = "Density (%)")
+lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
+# mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
+mtext("target genes: peaks overlap w/ 3kb promoters", col = "gray30")
+```
+
+* IRF4, target genes: ChIP-seq peaks in ChromHmm "strong enhancers" that are in contact with promoter regions through Hi-C 
 ```{r echo=FALSE}
 TF = "IRF4"
 filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
@@ -664,187 +999,5 @@ plot(hist[[1]]$mids, hist[[1]]$density, xlim = c(0,0.2), ylim = c(0,80), type = 
 lines(hist[[2]]$mids, hist[[2]]$density,  type = "o", col = "blue")
 # mtext("target genes: linked by HiC through top 10% peaks in DHS & H3K27ac", col = "gray30")
 mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancers", col = "gray30")
-```
-## New RNA expression level data: Geuvadis Database
-* RNA-seq gene expression data: ([GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz][Geuvadis]).
-* 23722 genes, 462 LCL cell lines from the 1000 Genomes
-* Peer-factor normalized RPKM: library depth & transcript lengths & expressed & PEER
-* 14102 genes overlap with Battle dataset
-
-[Geuvadis]: https://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/
-
-### $R^2$ difference between 2 datasets:
-```{r echo=FALSE}
-TF = "STAT1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000115415"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.6,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
-```
-
-```{r echo=FALSE}
-TF = "YY1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000100811"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.6,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
-```
-
-```{r echo=FALSE}
-TF = "CEBPB"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000172216"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.6,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
-```
-
-```{r echo=FALSE}
-TF = "SP1"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000185591"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.7,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
-```
-
-```{r echo=FALSE}
-TF = "NFYA"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000001167"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.6,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
-```
-
-```{r echo=FALSE}
-TF = "IRF4"
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_GD462.txt')
-R_sq_462 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_462[order(R_sq_462$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_462)[order(R_sq_462$rsquare,decreasing = T)]
-tmp[1:5]
-
-filename = paste0('~/Downloads/Research/LCL/',TF,'_all_genes_R2_2PCs.txt')
-R_sq_70 = read.table(filename, sep = "\t", header = FALSE, row.names = 1, na.strings = 'NA', 
-                  stringsAsFactors = FALSE, col.names = c("gene_id","rsquare"))
-tmp=R_sq_70[order(R_sq_70$rsquare,decreasing = T),]
-names(tmp) = row.names(R_sq_70)[order(R_sq_70$rsquare,decreasing = T)]
-tmp[1:5]
-
-R_sq_70$rsquare_462 = R_sq_462$rsquare[match(row.names(R_sq_70),row.names(R_sq_462))]
-tmp = na.omit(R_sq_70)
-tmp = tmp[-which(row.names(tmp)=="ENSG00000137265"),]
-title = paste(TF,"~ all genes R2 generated from 70 & 462 cell lines")
-plot(1:length(tmp$rsquare),tmp$rsquare[order(tmp$rsquare)],type = "l", col="blue",main = title,
-     xlab="genes in order",ylab=expression('R'^2*' values'))
-lines(1:length(tmp$rsquare),tmp$rsquare_462[order(tmp$rsquare)], col="red")
-legend(x=10000,y=0.5,lty=1,col=c("blue","red"),legend = c("Battle70,-2PCs","GD462"),cex=0.8)
-
-sum_lm = summary(lm(tmp$rsquare~tmp$rsquare_462))
-print(paste("Correlation:",sum_lm$r.squared))
 ```
 
