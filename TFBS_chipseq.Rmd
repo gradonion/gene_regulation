@@ -576,7 +576,7 @@ mtext("target genes: linked by HiC through peaks that overlap w/ strong enhancer
 
 [Geuvadis]: https://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/
 
-### $R^2$ difference between 2 datasets:
+### $R^2$ difference between 2 datasets
 
 We focus on the 14102 genes that are shared between both the Battle dataset and the Geudavis dataset.   
 For each TF, we calculate the correlation ($R^2$) of its expression level with each one of the 14102 genes, using the Geudavis dataset first and the Battle dataset next. We plot the $R^2$s obtained from the first dataset in increasing order (red), and then plot the $R^2$s obtained from the first dataset for the corresponding genes (light blue), as we expect to see some level of correlation between these two groups of $R^2$s. We then further calculated the correlation coefficient of these two groups of $R^2$s.
@@ -720,7 +720,13 @@ print(paste("Correlation btw the 2 groups of R^2\'s:",round(sum_lm$r.squared,dig
 
 
 
-### Correlation Analysis:
+
+### Strong Enhancers
+We use the annotations from the ChromHmm file [wgEncodeBroadHmmGm12878HMM.bed.gz][chromm] to define the "strong enhancer" regions on the human reference genome (_hg19_) in LCL cell line _GM12787_.
+
+[chromm]: http://rohsdb.cmb.usc.edu/GBshape/cgi-bin/hgTrackUi?db=hg19&g=wgEncodeBroadHmm
+
+### Correlation Analysis
 
 * STAT1, target genes: ChIP-seq peaks in 3kb promoter regions
 ```{r echo=FALSE}

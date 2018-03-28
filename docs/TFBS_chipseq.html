@@ -553,7 +553,7 @@ div.tocify {
 <li>14102 genes overlap with Battle dataset</li>
 </ul>
 <div id="r2-difference-between-2-datasets" class="section level3">
-<h3><span class="math inline">\(R^2\)</span> difference between 2 datasets:</h3>
+<h3><span class="math inline">\(R^2\)</span> difference between 2 datasets</h3>
 <p>We focus on the 14102 genes that are shared between both the Battle dataset and the Geudavis dataset.<br />
 For each TF, we calculate the correlation (<span class="math inline">\(R^2\)</span>) of its expression level with each one of the 14102 genes, using the Geudavis dataset first and the Battle dataset next. We plot the <span class="math inline">\(R^2\)</span>s obtained from the first dataset in increasing order (red), and then plot the <span class="math inline">\(R^2\)</span>s obtained from the first dataset for the corresponding genes (light blue), as we expect to see some level of correlation between these two groups of <span class="math inline">\(R^2\)</span>s. We then further calculated the correlation coefficient of these two groups of <span class="math inline">\(R^2\)</span>s.</p>
 <p><img src="Figs/unnamed-chunk-35-1.png" width="768" /></p>
@@ -569,8 +569,12 @@ For each TF, we calculate the correlation (<span class="math inline">\(R^2\)</sp
 <p><img src="Figs/unnamed-chunk-40-1.png" width="768" /></p>
 <pre><code>[1] &quot;Correlation btw the 2 groups of R^2&#39;s: 0.0075&quot;</code></pre>
 </div>
+<div id="strong-enhancers" class="section level3">
+<h3>Strong Enhancers</h3>
+<p>We use the annotations from the ChromHmm file <a href="http://rohsdb.cmb.usc.edu/GBshape/cgi-bin/hgTrackUi?db=hg19&amp;g=wgEncodeBroadHmm">wgEncodeBroadHmmGm12878HMM.bed.gz</a> to define the “strong enhancer” regions on the human reference genome (<em>hg19</em>) in LCL cell line <em>GM12787</em>.</p>
+</div>
 <div id="correlation-analysis" class="section level3">
-<h3>Correlation Analysis:</h3>
+<h3>Correlation Analysis</h3>
 <ul>
 <li>STAT1, target genes: ChIP-seq peaks in 3kb promoter regions</li>
 </ul>
